@@ -25,79 +25,92 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
     setExporting(true)
     try {
       const { jsPDF } = await import('jspdf')
-      const html2canvas = (await import('html2canvas')).default
-
-      // Create a printable version of the PO
-      const element = document.createElement('div')
-      element.style.padding = '40px'
-      element.style.backgroundColor = 'white'
-      element.innerHTML = `
-        <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
-          <div>
-            <div style="font-weight: bold;">C Morley Tech Services</div>
-            <div>130 N Hamilton St, STE B102</div>
-            <div>Georgetown, KY 40324</div>
-            <div>(502) 497-1812</div>
-          </div>
-          <div>
-            <div style="font-size: 32px; font-weight: bold;">PURCHASE ORDER</div>
-            <div style="font-size: 14px;"># ${po?.po_number}</div>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
-          <div>
-            <div style="font-weight: bold;">Vendor:</div>
-            <div>${po?.vendors?.name}</div>
-            <div>${po?.vendors?.address}</div>
-            <div>${po?.vendors?.city}, ${po?.vendors?.state} ${po?.vendors?.zip}</div>
-          </div>
-          <div>
-            <div style="font-weight: bold;">Ship To:</div>
-            <div>${po?.ship_to_address}</div>
-            <div style="margin-top: 20px;">
-              <div style="font-weight: bold;">Date:</div>
-              <div>${new Date(po?.date || '').toLocaleDateString()}</div>
-            </div>
-          </div>
-        </div>
-
-        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-          <thead>
-            <tr style="background-color: #333; color: white;">
-              <th style="padding: 12px; text-align: left;">Item & Description</th>
-              <th style="padding: 12px; text-align: center;">Qty</th>
-              <th style="padding: 12px; text-align: right;">Rate</th>
-              <th style="padding: 12px; text-align: right;">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${po?.line_items?.map((item: any) => `
-              <tr>
-                <td style="padding: 12px; border-bottom: 1px solid #ddd;">${item.description}</td>
-                <td style="padding: 12px; border-bottom: 1px solid #ddd; text-align: center;">${item.quantity}</td>
-                <td style="padding: 12px; border-bottom: 1px solid #ddd; text-align: right;">$${parseFloat(item.unit_price).toFixed(2)}</td>
-                <td style="padding: 12px; border-bottom: 1px solid #ddd; text-align: right;">$${parseFloat(item.amount).toFixed(2)}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-
-        <div style="text-align: right; margin-top: 20px;">
-          <div>Tax Exempt Amount: <span style="font-weight: bold;">$${parseFloat(po?.tax_exempt_amount || 0).toFixed(2)}</span></div>
-          <div style="margin-top: 10px; font-size: 18px;">
-            Total <span style="font-weight: bold;">$${parseFloat(po?.total || 0).toFixed(2)}</span>
-          </div>
-        </div>
-      `
-
-      const canvas = await html2canvas(element, { scale: 2 })
-      const imgData = canvas.toDataURL('image/png')
       const pdf = new jsPDF('p', 'mm', 'letter')
 
-      const imgWidth = 190
-      const imgHeight = (canvas.height * imgWidth) / canvas.width
-      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight)
+      let yPos = 20
+
+      // Company header
+      pdf.setFontSize(14)
+      pdf.text('C Morley Tech Services', 20, yPos)
+      yPos += 5
+      pdf.setFontSize(10)
+      pdf.text('130 N Hamilton St, STE B102', 20, yPos)
+      yPos += 4
+      pdf.text('Georgetown, KY 40324', 20, yPos)
+      yPos += 4
+      pdf.text('(502) 497-1812', 20, yPos)
+
+      // Title and PO number
+      pdf.setFontSize(28)
+      pdf.text('PURCHASE ORDER', 120, 25)
+      pdf.setFontSize(11)
+      pdf.text(`# ${po?.po_number}`, 120, 40)
+
+      yPos = 55
+
+      // Vendor section
+      pdf.setFontSize(10)
+      pdf.setFont(undefined, 'bold')
+      pdf.text('Vendor:', 20, yPos)
+      pdf.setFont(undefined, 'normal')
+      yPos += 5
+      pdf.text(po?.vendors?.name || '', 20, yPos)
+      yPos += 4
+      pdf.text(po?.vendors?.address || '', 20, yPos)
+      yPos += 4
+      pdf.text(`${po?.vendors?.city}, ${po?.vendors?.state} ${po?.vendors?.zip}`, 20, yPos)
+
+      // Ship To section
+      yPos = 55
+      pdf.setFont(undefined, 'bold')
+      pdf.text('Ship To:', 120, yPos)
+      pdf.setFont(undefined, 'normal')
+      yPos += 5
+      pdf.text(po?.ship_to_address || '', 120, yPos, { maxWidth: 80 })
+
+      yPos += 20
+      pdf.setFont(undefined, 'bold')
+      pdf.text('Date:', 120, yPos)
+      pdf.setFont(undefined, 'normal')
+      yPos += 5
+      pdf.text(new Date(po?.date || '').toLocaleDateString(), 120, yPos)
+
+      yPos = 100
+
+      // Table headers
+      pdf.setFillColor(50, 50, 50)
+      pdf.setTextColor(255, 255, 255)
+      pdf.setFont(undefined, 'bold')
+      pdf.rect(20, yPos, 170, 6, 'F')
+      pdf.text('Item & Description', 22, yPos + 4)
+      pdf.text('Qty', 130, yPos + 4)
+      pdf.text('Rate', 150, yPos + 4)
+      pdf.text('Amount', 170, yPos + 4)
+
+      yPos += 8
+      pdf.setTextColor(0, 0, 0)
+      pdf.setFont(undefined, 'normal')
+
+      // Line items
+      po?.line_items?.forEach((item: any) => {
+        pdf.text(item.description, 22, yPos)
+        pdf.text(item.quantity.toString(), 130, yPos)
+        pdf.text(`$${parseFloat(item.unit_price).toFixed(2)}`, 150, yPos)
+        pdf.text(`$${parseFloat(item.amount).toFixed(2)}`, 170, yPos)
+        yPos += 6
+      })
+
+      yPos += 5
+
+      // Totals
+      pdf.setFont(undefined, 'normal')
+      pdf.text('Tax Exempt Amount:', 120, yPos)
+      pdf.text(`$${parseFloat(po?.tax_exempt_amount || 0).toFixed(2)}`, 170, yPos)
+      yPos += 8
+      pdf.setFont(undefined, 'bold')
+      pdf.setFontSize(12)
+      pdf.text('Total:', 120, yPos)
+      pdf.text(`$${parseFloat(po?.total || 0).toFixed(2)}`, 170, yPos)
 
       pdf.save(`${po?.po_number}.pdf`)
     } catch (error) {
