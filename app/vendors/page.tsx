@@ -57,11 +57,11 @@ export default function VendorsPage() {
       <table className="w-full border-collapse border">
         <thead>
           <tr className="bg-gray-200">
-            <th className="border p-2">Name</th>
+            <th className="border p-2 w-24">Name</th>
             <th className="border p-2">City, State</th>
             <th className="border p-2">Phone</th>
             <th className="border p-2">Email</th>
-            <th className="border p-2 w-32">Actions</th>
+            <th className="border p-2 w-40">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -71,7 +71,7 @@ export default function VendorsPage() {
               <td className="border p-2">{vendor.city}, {vendor.state}</td>
               <td className="border p-2">{vendor.phone}</td>
               <td className="border p-2">{vendor.email}</td>
-              <td className="border p-2 space-x-2">
+              <td className="border p-2 flex gap-2">
                 <Link
                   href={`/vendors/${vendor.id}/edit`}
                   className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
