@@ -16,6 +16,7 @@ export interface Item {
   sku: string
   description: string
   uom: string
+  selling_price: number
   created_at: string
 }
 

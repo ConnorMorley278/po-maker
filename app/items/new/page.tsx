@@ -14,6 +14,7 @@ export default function NewItemPage() {
     sku: '',
     description: '',
     uom: '',
+    selling_price: '',
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -48,6 +49,7 @@ export default function NewItemPage() {
           sku: formData.sku,
           description: formData.description,
           uom: uomValue,
+          selling_price: parseFloat(formData.selling_price),
         }),
       })
 
@@ -125,6 +127,21 @@ export default function NewItemPage() {
             />
           </div>
         )}
+
+        <div>
+          <label className="block mb-1">Selling Price *</label>
+          <input
+            type="number"
+            name="selling_price"
+            value={formData.selling_price}
+            onChange={handleInputChange}
+            className="w-full border p-2 rounded"
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+            required
+          />
+        </div>
 
         <div className="flex gap-2 pt-4">
           <button

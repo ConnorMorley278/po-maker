@@ -74,6 +74,7 @@ export default function ItemsPage() {
             <th className="border p-2">SKU</th>
             <th className="border p-2">Description</th>
             <th className="border p-2">UOM</th>
+            <th className="border p-2">Selling Price</th>
             <th className="border p-2 w-40">Actions</th>
           </tr>
         </thead>
@@ -83,6 +84,7 @@ export default function ItemsPage() {
               <td className="border p-2">{item.sku}</td>
               <td className="border p-2">{item.description}</td>
               <td className="border p-2">{item.uom}</td>
+              <td className="border p-2 text-right">${item.selling_price.toFixed(2)}</td>
               <td className="border p-2 flex gap-2">
                 <Link
                   href={`/items/${item.id}/edit`}
