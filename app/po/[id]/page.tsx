@@ -27,90 +27,99 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
       const { jsPDF } = await import('jspdf')
       const pdf = new jsPDF('p', 'mm', 'letter')
 
-      let yPos = 20
-
-      // Company header
-      pdf.setFontSize(14)
-      pdf.text('C Morley Tech Services', 20, yPos)
-      yPos += 5
-      pdf.setFontSize(10)
-      pdf.text('130 N Hamilton St, STE B102', 20, yPos)
-      yPos += 4
-      pdf.text('Georgetown, KY 40324', 20, yPos)
-      yPos += 4
-      pdf.text('(502) 497-1812', 20, yPos)
-
-      // Title and PO number
-      pdf.setFontSize(28)
-      pdf.text('PURCHASE ORDER', 120, 25)
+      // Company header (left side)
       pdf.setFontSize(11)
-      pdf.text(`# ${po?.po_number}`, 120, 40)
+      pdf.setFont(undefined, 'bold')
+      pdf.text('C Morley Tech Services', 20, 20)
 
-      yPos = 55
+      pdf.setFontSize(9)
+      pdf.setFont(undefined, 'normal')
+      pdf.text('130 N Hamilton St, STE B102,', 20, 26)
+      pdf.text('Georgetown, KY 40324', 20, 31)
+      pdf.text('(502) 497-1812', 20, 36)
+
+      // PURCHASE ORDER title (right side)
+      pdf.setFontSize(32)
+      pdf.setFont(undefined, 'bold')
+      pdf.text('PURCHASE ORDER', 120, 28, { align: 'right' })
+
+      pdf.setFontSize(12)
+      pdf.text(`# ${po?.po_number}`, 200, 45, { align: 'right' })
 
       // Vendor section
       pdf.setFontSize(10)
       pdf.setFont(undefined, 'bold')
-      pdf.text('Vendor:', 20, yPos)
+      pdf.text('Vendor:', 20, 60)
+
       pdf.setFont(undefined, 'normal')
-      yPos += 5
-      pdf.text(po?.vendors?.name || '', 20, yPos)
-      yPos += 4
-      pdf.text(po?.vendors?.address || '', 20, yPos)
-      yPos += 4
-      pdf.text(`${po?.vendors?.city}, ${po?.vendors?.state} ${po?.vendors?.zip}`, 20, yPos)
+      pdf.text(po?.vendors?.name || '', 20, 66)
+      pdf.text(po?.vendors?.address || '', 20, 71)
+      pdf.text(`${po?.vendors?.city}, ${po?.vendors?.state} ${po?.vendors?.zip}`, 20, 76)
 
       // Ship To section
-      yPos = 55
       pdf.setFont(undefined, 'bold')
-      pdf.text('Ship To:', 120, yPos)
-      pdf.setFont(undefined, 'normal')
-      yPos += 5
-      pdf.text(po?.ship_to_address || '', 120, yPos, { maxWidth: 80 })
+      pdf.text('Ship To:', 20, 90)
 
-      yPos += 20
-      pdf.setFont(undefined, 'bold')
-      pdf.text('Date:', 120, yPos)
       pdf.setFont(undefined, 'normal')
-      yPos += 5
-      pdf.text(new Date(po?.date || '').toLocaleDateString(), 120, yPos)
+      pdf.text(po?.ship_to_address || '', 20, 96, { maxWidth: 100 })
 
-      yPos = 100
+      // Date (right side)
+      pdf.setFont(undefined, 'normal')
+      pdf.text('Date :', 150, 90)
+      pdf.text(new Date(po?.date || '').toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit'
+      }).replace(/\//g, ' '), 175, 90)
 
       // Table headers
-      pdf.setFillColor(50, 50, 50)
+      const tableTop = 115
+      pdf.setFillColor(60, 60, 60)
       pdf.setTextColor(255, 255, 255)
       pdf.setFont(undefined, 'bold')
-      pdf.rect(20, yPos, 170, 6, 'F')
-      pdf.text('Item & Description', 22, yPos + 4)
-      pdf.text('Qty', 130, yPos + 4)
-      pdf.text('Rate', 150, yPos + 4)
-      pdf.text('Amount', 170, yPos + 4)
-
-      yPos += 8
-      pdf.setTextColor(0, 0, 0)
-      pdf.setFont(undefined, 'normal')
+      pdf.setFontSize(9)
+      pdf.rect(20, tableTop, 170, 6, 'F')
+      pdf.text('Item & Description', 22, tableTop + 4)
+      pdf.text('Qty', 130, tableTop + 4)
+      pdf.text('Rate', 155, tableTop + 4)
+      pdf.text('Amount', 180, tableTop + 4)
 
       // Line items
+      pdf.setTextColor(0, 0, 0)
+      pdf.setFont(undefined, 'normal')
+      pdf.setFontSize(9)
+      let yPos = tableTop + 10
+
       po?.line_items?.forEach((item: any) => {
         pdf.text(item.description, 22, yPos)
-        pdf.text(item.quantity.toString(), 130, yPos)
-        pdf.text(`$${parseFloat(item.unit_price).toFixed(2)}`, 150, yPos)
-        pdf.text(`$${parseFloat(item.amount).toFixed(2)}`, 170, yPos)
+        pdf.text(`${item.quantity}`, 130, yPos)
+        pdf.text(`${parseFloat(item.unit_price).toFixed(2)}`, 155, yPos)
+        pdf.text(`${parseFloat(item.amount).toFixed(2)}`, 180, yPos)
         yPos += 6
       })
 
-      yPos += 5
+      // Separator line
+      pdf.setDrawColor(150, 150, 150)
+      pdf.line(20, yPos + 2, 190, yPos + 2)
 
-      // Totals
-      pdf.setFont(undefined, 'normal')
-      pdf.text('Tax Exempt Amount:', 120, yPos)
-      pdf.text(`$${parseFloat(po?.tax_exempt_amount || 0).toFixed(2)}`, 170, yPos)
       yPos += 8
+
+      // Totals section
+      pdf.setFontSize(9)
+      pdf.setFont(undefined, 'normal')
+      pdf.text('Tax Exempt Amount:', 130, yPos)
+      pdf.text(`${parseFloat(po?.tax_exempt_amount || 0).toFixed(2)}`, 180, yPos)
+
+      yPos += 7
       pdf.setFont(undefined, 'bold')
-      pdf.setFontSize(12)
-      pdf.text('Total:', 120, yPos)
-      pdf.text(`$${parseFloat(po?.total || 0).toFixed(2)}`, 170, yPos)
+      pdf.setFontSize(11)
+      pdf.text('Total', 130, yPos)
+      pdf.text(`$${parseFloat(po?.total || 0).toFixed(2)}`, 180, yPos)
+
+      // Footer - POWERED BY
+      pdf.setFontSize(8)
+      pdf.setFont(undefined, 'normal')
+      pdf.text('POWERED BY', 20, 270)
 
       pdf.save(`${po?.po_number}.pdf`)
     } catch (error) {
