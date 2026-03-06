@@ -1,0 +1,12 @@
+{
+  "pages": {
+    "/_app": []
+  },
+  "devFiles": [],
+  "polyfillFiles": [],
+  "lowPriorityFiles": [
+    "static/PySuaiF76TXB19yPg8-Gs/_ssgManifest.js",
+    "static/PySuaiF76TXB19yPg8-Gs/_buildManifest.js"
+  ],
+  "rootMainFiles": []
+}

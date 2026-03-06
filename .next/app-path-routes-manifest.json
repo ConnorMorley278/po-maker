@@ -1,0 +1,14 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/pos/[id]/route": "/api/pos/[id]",
+  "/api/pos/next-number/route": "/api/pos/next-number",
+  "/api/pos/route": "/api/pos",
+  "/api/vendors/route": "/api/vendors",
+  "/create/page": "/create",
+  "/favicon.ico/route": "/favicon.ico",
+  "/page": "/",
+  "/po/[id]/page": "/po/[id]",
+  "/vendors/new/page": "/vendors/new",
+  "/vendors/page": "/vendors"
+}
