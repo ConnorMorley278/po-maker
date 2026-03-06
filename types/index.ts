@@ -30,8 +30,6 @@ export interface PO {
   vendor?: Vendor
   vendors?: Vendor
   ship_to_address?: string
-  delivery_address?: string
-  payment_terms?: string
   notes?: string
   tax_exempt_amount: number
   total: number
@@ -44,8 +42,6 @@ export interface CreatePOInput {
   date: string
   vendor_id: string
   ship_to_address?: string
-  delivery_address?: string
-  payment_terms?: string
   notes?: string
   line_items: {
     description: string

@@ -164,15 +164,6 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
             <p className="text-gray-600">Ship To</p>
             <p className="text-sm whitespace-pre">{po.ship_to_address}</p>
           </div>
-          <div>
-            <p className="text-gray-600">Payment Terms</p>
-            <p className="font-bold">{po.payment_terms}</p>
-          </div>
-        </div>
-
-        <div>
-          <p className="text-gray-600">Delivery Address</p>
-          <p className="text-sm whitespace-pre">{po.delivery_address}</p>
         </div>
 
         <div>

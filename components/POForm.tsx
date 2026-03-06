@@ -27,8 +27,6 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
     date: initialData?.date || new Date().toISOString().split('T')[0],
     vendor_id: initialData?.vendor_id || '',
     ship_to_address: initialData?.ship_to_address || '',
-    delivery_address: initialData?.delivery_address || '',
-    payment_terms: initialData?.payment_terms || '',
     notes: initialData?.notes || '',
   })
 
@@ -44,7 +42,18 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+
+    // Auto-populate ship_to_address when vendor is selected
+    if (name === 'vendor_id') {
+      const selectedVendor = vendors.find(v => v.id === value)
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        ship_to_address: selectedVendor?.ship_to_address || ''
+      }))
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
   }
 
   const handleLineItemChange = (id: string, field: string, value: any) => {
@@ -125,26 +134,6 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
           />
         </div>
 
-        <div className="col-span-2">
-          <label className="block mb-1">Delivery Address</label>
-          <textarea
-            name="delivery_address"
-            value={formData.delivery_address}
-            onChange={handleInputChange}
-            className="w-full border p-2 rounded h-20"
-          />
-        </div>
-
-        <div>
-          <label className="block mb-1">Payment Terms</label>
-          <input
-            type="text"
-            name="payment_terms"
-            value={formData.payment_terms}
-            onChange={handleInputChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
 
         <div className="col-span-2">
           <label className="block mb-1">Notes</label>
