@@ -213,8 +213,6 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
         </button>
 
         <div className="space-y-2 text-right">
-          <div>Subtotal: <span className="font-bold">${subtotal.toFixed(2)}</span></div>
-          <div>Tax Amount: <span className="font-bold">${taxAmount.toFixed(2)}</span></div>
           <div className="text-lg">Total: <span className="font-bold">${total.toFixed(2)}</span></div>
         </div>
       </div>
