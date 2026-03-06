@@ -8,6 +8,7 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
   const { id } = use(params)
   const [po, setPO] = useState<(PO & { vendors: any }) | null>(null)
   const [loading, setLoading] = useState(true)
+  const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
     const fetchPO = async () => {
@@ -20,6 +21,29 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
     fetchPO()
   }, [id])
 
+  const handleDownloadPDF = async () => {
+    setExporting(true)
+    try {
+      const res = await fetch(`/api/pos/${id}/pdf`)
+      const blob = await res.blob()
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${po?.po_number}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+    } catch (error) {
+      console.error('Error downloading PDF:', error)
+      alert('Error downloading PDF')
+    } finally {
+      setExporting(false)
+    }
+  }
+
   if (loading) return <div>Loading...</div>
   if (!po) return <div>PO not found</div>
 
@@ -28,6 +52,13 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{po.po_number}</h1>
         <div className="space-x-2">
+          <button
+            onClick={handleDownloadPDF}
+            disabled={exporting}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
+          >
+            {exporting ? 'Saving...' : 'Save as PDF'}
+          </button>
           <Link href={`/edit/${po.id}`} className="bg-green-600 text-white px-4 py-2 rounded inline-block">
             Edit
           </Link>
