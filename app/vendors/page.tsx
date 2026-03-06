@@ -57,8 +57,8 @@ export default function VendorsPage() {
       <table className="w-full border-collapse border">
         <thead>
           <tr className="bg-gray-200">
-            <th className="border p-2 w-40">Name</th>
-            <th className="border p-2">City, State</th>
+            <th className="border p-2 w-56">Name</th>
+            <th className="border p-2">Address</th>
             <th className="border p-2">Phone</th>
             <th className="border p-2">Email</th>
             <th className="border p-2 w-40">Actions</th>
@@ -68,7 +68,7 @@ export default function VendorsPage() {
           {vendors.map(vendor => (
             <tr key={vendor.id} className="hover:bg-gray-100">
               <td className="border p-2">{vendor.name}</td>
-              <td className="border p-2">{vendor.city}, {vendor.state}</td>
+              <td className="border p-2">{vendor.address}<br/>{vendor.city}, {vendor.state} {vendor.zip}</td>
               <td className="border p-2">{vendor.phone}</td>
               <td className="border p-2">{vendor.email}</td>
               <td className="border p-2 flex gap-2">
