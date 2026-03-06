@@ -1,23 +1,24 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, use } from 'react'
 import Link from 'next/link'
 import { PO } from '@/types'
 
-export default function POViewPage({ params }: { params: { id: string } }) {
+export default function POViewPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [po, setPO] = useState<(PO & { vendors: any }) | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchPO = async () => {
-      const res = await fetch(`/api/pos/${params.id}`)
+      const res = await fetch(`/api/pos/${id}`)
       const data = await res.json()
       setPO(data)
       setLoading(false)
     }
 
     fetchPO()
-  }, [params.id])
+  }, [id])
 
   if (loading) return <div>Loading...</div>
   if (!po) return <div>PO not found</div>
