@@ -7,6 +7,7 @@ import { Vendor } from '@/types'
 export default function VendorsPage() {
   const [vendors, setVendors] = useState<Vendor[]>([])
   const [loading, setLoading] = useState(true)
+  const [deleting, setDeleting] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -18,6 +19,27 @@ export default function VendorsPage() {
 
     fetchVendors()
   }, [])
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this vendor?')) return
+
+    setDeleting(id)
+    try {
+      const res = await fetch(`/api/vendors/${id}`, {
+        method: 'DELETE',
+      })
+
+      if (res.ok) {
+        setVendors(vendors.filter(v => v.id !== id))
+      } else {
+        alert('Error deleting vendor')
+      }
+    } catch (error) {
+      alert('Error deleting vendor')
+    } finally {
+      setDeleting(null)
+    }
+  }
 
   if (loading) return <div>Loading...</div>
 
@@ -39,6 +61,7 @@ export default function VendorsPage() {
             <th className="border p-2">City, State</th>
             <th className="border p-2">Phone</th>
             <th className="border p-2">Email</th>
+            <th className="border p-2 w-32">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -48,6 +71,21 @@ export default function VendorsPage() {
               <td className="border p-2">{vendor.city}, {vendor.state}</td>
               <td className="border p-2">{vendor.phone}</td>
               <td className="border p-2">{vendor.email}</td>
+              <td className="border p-2 space-x-2">
+                <Link
+                  href={`/vendors/${vendor.id}/edit`}
+                  className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                >
+                  Edit
+                </Link>
+                <button
+                  onClick={() => handleDelete(vendor.id)}
+                  disabled={deleting === vendor.id}
+                  className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 disabled:bg-gray-400"
+                >
+                  {deleting === vendor.id ? 'Deleting...' : 'Delete'}
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
