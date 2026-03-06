@@ -153,13 +153,13 @@ export default function EditVendorPage({ params }: { params: Promise<{ id: strin
 
         <div>
           <label className="block text-sm font-medium mb-1">Ship To Address</label>
-          <input
-            type="text"
+          <textarea
             name="ship_to_address"
             value={vendor.ship_to_address || ''}
             onChange={handleChange}
             className="w-full border p-2 rounded"
             placeholder="Default shipping address for this vendor"
+            rows={3}
           />
         </div>
 

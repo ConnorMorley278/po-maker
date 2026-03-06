@@ -121,13 +121,13 @@ export default function AddVendorPage() {
 
         <div>
           <label className="block mb-1">Ship To Address</label>
-          <input
-            type="text"
+          <textarea
             name="ship_to_address"
             value={formData.ship_to_address}
             onChange={handleChange}
             className="w-full border p-2 rounded"
             placeholder="Default shipping address for this vendor"
+            rows={3}
           />
         </div>
 
