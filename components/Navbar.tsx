@@ -32,7 +32,6 @@ export default function Navbar() {
         <div className="flex gap-6">
           <Link href="/" className="font-bold">PO Maker</Link>
           <Link href="/">Dashboard</Link>
-          <Link href="/create">Create PO</Link>
           <Link href="/vendors">Vendors</Link>
           <Link href="/settings">Settings</Link>
         </div>

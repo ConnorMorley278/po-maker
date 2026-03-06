@@ -57,7 +57,7 @@ export default function VendorsPage() {
       <table className="w-full border-collapse border">
         <thead>
           <tr className="bg-gray-200">
-            <th className="border p-2 w-24">Name</th>
+            <th className="border p-2 w-40">Name</th>
             <th className="border p-2">City, State</th>
             <th className="border p-2">Phone</th>
             <th className="border p-2">Email</th>
