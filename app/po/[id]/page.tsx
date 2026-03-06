@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { PO } from '@/types'
-import { generatePOPDF } from '@/lib/pdf-export'
 
 export default function POViewPage({ params }: { params: { id: string } }) {
   const [po, setPO] = useState<(PO & { vendors: any }) | null>(null)
@@ -20,12 +19,6 @@ export default function POViewPage({ params }: { params: { id: string } }) {
     fetchPO()
   }, [params.id])
 
-  const handleExportPDF = () => {
-    if (!po) return
-    const doc = generatePOPDF(po)
-    doc.save(`${po.po_number}.pdf`)
-  }
-
   if (loading) return <div>Loading...</div>
   if (!po) return <div>PO not found</div>
 
@@ -34,12 +27,6 @@ export default function POViewPage({ params }: { params: { id: string } }) {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{po.po_number}</h1>
         <div className="space-x-2">
-          <button
-            onClick={handleExportPDF}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Export to PDF
-          </button>
           <Link href={`/edit/${po.id}`} className="bg-green-600 text-white px-4 py-2 rounded inline-block">
             Edit
           </Link>
