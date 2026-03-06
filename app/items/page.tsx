@@ -8,13 +8,26 @@ export default function ItemsPage() {
   const [items, setItems] = useState<Item[]>([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const fetchItems = async () => {
-      const res = await fetch('/api/items')
-      const data = await res.json()
-      setItems(data)
-      setLoading(false)
+      try {
+        const res = await fetch('/api/items')
+        if (!res.ok) {
+          throw new Error('Failed to fetch items')
+        }
+        const data = await res.json()
+        if (Array.isArray(data)) {
+          setItems(data)
+        } else {
+          setError('Unexpected response format')
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch items')
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchItems()
@@ -42,6 +55,7 @@ export default function ItemsPage() {
   }
 
   if (loading) return <div>Loading...</div>
+  if (error) return <div className="text-red-600">Error: {error}</div>
 
   return (
     <div>
