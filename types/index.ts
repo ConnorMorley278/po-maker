@@ -7,6 +7,7 @@ export interface Vendor {
   zip?: string
   phone?: string
   email?: string
+  ship_to_address?: string
   created_at: string
 }
 

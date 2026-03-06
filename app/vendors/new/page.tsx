@@ -13,6 +13,7 @@ export default function AddVendorPage() {
     zip: '',
     phone: '',
     email: '',
+    ship_to_address: '',
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,6 +116,18 @@ export default function AddVendorPage() {
             value={formData.email}
             onChange={handleChange}
             className="w-full border p-2 rounded"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1">Ship To Address</label>
+          <input
+            type="text"
+            name="ship_to_address"
+            value={formData.ship_to_address}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+            placeholder="Default shipping address for this vendor"
           />
         </div>
 

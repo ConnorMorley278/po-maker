@@ -151,6 +151,18 @@ export default function EditVendorPage({ params }: { params: Promise<{ id: strin
           </div>
         </div>
 
+        <div>
+          <label className="block text-sm font-medium mb-1">Ship To Address</label>
+          <input
+            type="text"
+            name="ship_to_address"
+            value={vendor.ship_to_address || ''}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+            placeholder="Default shipping address for this vendor"
+          />
+        </div>
+
         {error && <div className="text-red-600 text-sm">{error}</div>}
 
         <div className="flex gap-2 pt-4">

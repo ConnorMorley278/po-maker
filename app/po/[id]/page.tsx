@@ -41,10 +41,10 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
       // PURCHASE ORDER title (right side)
       pdf.setFontSize(32)
       pdf.setFont(undefined, 'bold')
-      pdf.text('PURCHASE ORDER', 120, 28, { align: 'right' })
+      pdf.text('PURCHASE ORDER', 190, 28, { align: 'right' })
 
       pdf.setFontSize(12)
-      pdf.text(`# ${po?.po_number}`, 200, 45, { align: 'right' })
+      pdf.text(`# ${po?.po_number}`, 190, 45, { align: 'right' })
 
       // Vendor section
       pdf.setFontSize(10)
@@ -115,11 +115,6 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
       pdf.setFontSize(11)
       pdf.text('Total', 130, yPos)
       pdf.text(`$${parseFloat(po?.total || 0).toFixed(2)}`, 180, yPos)
-
-      // Footer - POWERED BY
-      pdf.setFontSize(8)
-      pdf.setFont(undefined, 'normal')
-      pdf.text('POWERED BY', 20, 270)
 
       pdf.save(`${po?.po_number}.pdf`)
     } catch (error) {
