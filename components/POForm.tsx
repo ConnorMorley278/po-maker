@@ -8,7 +8,6 @@ interface LineItemInput {
   description: string
   quantity: number
   unit_price: number
-  tax_rate: number
 }
 
 interface POFormProps {
@@ -20,7 +19,7 @@ interface POFormProps {
 export default function POForm({ onSubmit, loading, initialData }: POFormProps) {
   const [vendors, setVendors] = useState<Vendor[]>([])
   const [lineItems, setLineItems] = useState<LineItemInput[]>([
-    { id: '1', description: '', quantity: 1, unit_price: 0, tax_rate: 0 },
+    { id: '1', description: '', quantity: 1, unit_price: 0 },
   ])
 
   const [formData, setFormData] = useState({
@@ -66,7 +65,7 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
 
   const addLineItem = () => {
     const newId = Date.now().toString()
-    setLineItems(prev => [...prev, { id: newId, description: '', quantity: 1, unit_price: 0, tax_rate: 0 }])
+    setLineItems(prev => [...prev, { id: newId, description: '', quantity: 1, unit_price: 0 }])
   }
 
   const removeLineItem = (id: string) => {
@@ -87,11 +86,7 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
   }
 
   const subtotal = lineItems.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0)
-  const taxAmount = lineItems.reduce((sum, item) => {
-    const itemAmount = item.quantity * item.unit_price
-    return sum + (itemAmount * (item.tax_rate / 100))
-  }, 0)
-  const total = subtotal + taxAmount
+  const total = subtotal
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -155,7 +150,6 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
               <th className="border p-2">Description</th>
               <th className="border p-2 w-20">Qty</th>
               <th className="border p-2 w-20">Rate</th>
-              <th className="border p-2 w-20">Tax %</th>
               <th className="border p-2 w-24">Amount</th>
               <th className="border p-2 w-16">Delete</th>
             </tr>
@@ -192,15 +186,6 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
                       className="w-full border p-1 rounded"
                       step="0.01"
                       required
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      type="number"
-                      value={item.tax_rate}
-                      onChange={(e) => handleLineItemChange(item.id, 'tax_rate', parseFloat(e.target.value))}
-                      className="w-full border p-1 rounded"
-                      step="0.01"
                     />
                   </td>
                   <td className="border p-2 text-right">${amount.toFixed(2)}</td>

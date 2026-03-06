@@ -11,13 +11,20 @@ export interface Vendor {
   created_at: string
 }
 
+export interface Item {
+  id: string
+  sku: string
+  description: string
+  uom: string
+  created_at: string
+}
+
 export interface LineItem {
   id: string
   po_id: string
   description: string
   quantity: number
   unit_price: number
-  tax_rate: number
   amount: number
   created_at: string
 }
@@ -47,6 +54,5 @@ export interface CreatePOInput {
     description: string
     quantity: number
     unit_price: number
-    tax_rate: number
   }[]
 }

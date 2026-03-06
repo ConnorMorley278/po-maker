@@ -33,6 +33,7 @@ export default function Navbar() {
           <Link href="/" className="font-bold">PO Maker</Link>
           <Link href="/">Dashboard</Link>
           <Link href="/vendors">Vendors</Link>
+          <Link href="/items">Items</Link>
           <Link href="/settings">Settings</Link>
         </div>
         <div className="text-sm">{dateTime}</div>
