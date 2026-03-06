@@ -24,18 +24,82 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
   const handleDownloadPDF = async () => {
     setExporting(true)
     try {
-      const res = await fetch(`/api/pos/${id}/pdf`)
-      const blob = await res.blob()
+      const { jsPDF } = await import('jspdf')
+      const html2canvas = (await import('html2canvas')).default
 
-      // Create download link
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `${po?.po_number}.pdf`
-      document.body.appendChild(a)
-      a.click()
-      window.URL.revokeObjectURL(url)
-      document.body.removeChild(a)
+      // Create a printable version of the PO
+      const element = document.createElement('div')
+      element.style.padding = '40px'
+      element.style.backgroundColor = 'white'
+      element.innerHTML = `
+        <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
+          <div>
+            <div style="font-weight: bold;">C Morley Tech Services</div>
+            <div>130 N Hamilton St, STE B102</div>
+            <div>Georgetown, KY 40324</div>
+            <div>(502) 497-1812</div>
+          </div>
+          <div>
+            <div style="font-size: 32px; font-weight: bold;">PURCHASE ORDER</div>
+            <div style="font-size: 14px;"># ${po?.po_number}</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+          <div>
+            <div style="font-weight: bold;">Vendor:</div>
+            <div>${po?.vendors?.name}</div>
+            <div>${po?.vendors?.address}</div>
+            <div>${po?.vendors?.city}, ${po?.vendors?.state} ${po?.vendors?.zip}</div>
+          </div>
+          <div>
+            <div style="font-weight: bold;">Ship To:</div>
+            <div>${po?.ship_to_address}</div>
+            <div style="margin-top: 20px;">
+              <div style="font-weight: bold;">Date:</div>
+              <div>${new Date(po?.date || '').toLocaleDateString()}</div>
+            </div>
+          </div>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+          <thead>
+            <tr style="background-color: #333; color: white;">
+              <th style="padding: 12px; text-align: left;">Item & Description</th>
+              <th style="padding: 12px; text-align: center;">Qty</th>
+              <th style="padding: 12px; text-align: right;">Rate</th>
+              <th style="padding: 12px; text-align: right;">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${po?.line_items?.map((item: any) => `
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #ddd;">${item.description}</td>
+                <td style="padding: 12px; border-bottom: 1px solid #ddd; text-align: center;">${item.quantity}</td>
+                <td style="padding: 12px; border-bottom: 1px solid #ddd; text-align: right;">$${parseFloat(item.unit_price).toFixed(2)}</td>
+                <td style="padding: 12px; border-bottom: 1px solid #ddd; text-align: right;">$${parseFloat(item.amount).toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        <div style="text-align: right; margin-top: 20px;">
+          <div>Tax Exempt Amount: <span style="font-weight: bold;">$${parseFloat(po?.tax_exempt_amount || 0).toFixed(2)}</span></div>
+          <div style="margin-top: 10px; font-size: 18px;">
+            Total <span style="font-weight: bold;">$${parseFloat(po?.total || 0).toFixed(2)}</span>
+          </div>
+        </div>
+      `
+
+      const canvas = await html2canvas(element, { scale: 2 })
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF('p', 'mm', 'letter')
+
+      const imgWidth = 190
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight)
+
+      pdf.save(`${po?.po_number}.pdf`)
     } catch (error) {
       console.error('Error downloading PDF:', error)
       alert('Error downloading PDF')
