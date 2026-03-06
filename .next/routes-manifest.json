@@ -22,6 +22,14 @@
   },
   "dynamicRoutes": [
     {
+      "page": "/api/items/[id]",
+      "regex": "^/api/items/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/items/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/api/pos/[id]",
       "regex": "^/api/pos/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -30,12 +38,36 @@
       "namedRegex": "^/api/pos/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/vendors/[id]",
+      "regex": "^/api/vendors/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/vendors/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/items/[id]/edit",
+      "regex": "^/items/([^/]+?)/edit(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/items/(?<nxtPid>[^/]+?)/edit(?:/)?$"
+    },
+    {
       "page": "/po/[id]",
       "regex": "^/po/([^/]+?)(?:/)?$",
       "routeKeys": {
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/po/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/vendors/[id]/edit",
+      "regex": "^/vendors/([^/]+?)/edit(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/vendors/(?<nxtPid>[^/]+?)/edit(?:/)?$"
     }
   ],
   "staticRoutes": [
@@ -58,6 +90,18 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/api/import",
+      "regex": "^/api/import(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/import(?:/)?$"
+    },
+    {
+      "page": "/api/items",
+      "regex": "^/api/items(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/items(?:/)?$"
+    },
+    {
       "page": "/api/pos",
       "regex": "^/api/pos(?:/)?$",
       "routeKeys": {},
@@ -68,6 +112,12 @@
       "regex": "^/api/pos/next\\-number(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/pos/next\\-number(?:/)?$"
+    },
+    {
+      "page": "/api/settings",
+      "regex": "^/api/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/settings(?:/)?$"
     },
     {
       "page": "/api/vendors",
@@ -82,10 +132,22 @@
       "namedRegex": "^/create(?:/)?$"
     },
     {
-      "page": "/favicon.ico",
-      "regex": "^/favicon\\.ico(?:/)?$",
+      "page": "/items",
+      "regex": "^/items(?:/)?$",
       "routeKeys": {},
-      "namedRegex": "^/favicon\\.ico(?:/)?$"
+      "namedRegex": "^/items(?:/)?$"
+    },
+    {
+      "page": "/items/new",
+      "regex": "^/items/new(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/items/new(?:/)?$"
+    },
+    {
+      "page": "/settings",
+      "regex": "^/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings(?:/)?$"
     },
     {
       "page": "/vendors",

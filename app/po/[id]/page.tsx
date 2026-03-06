@@ -29,18 +29,18 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
 
       // Company header (left side)
       pdf.setFontSize(11)
-      pdf.setFont(undefined, 'bold')
+      pdf.setFont('helvetica', 'bold')
       pdf.text('C Morley Tech Services', 20, 20)
 
       pdf.setFontSize(9)
-      pdf.setFont(undefined, 'normal')
+      pdf.setFont('helvetica', 'normal')
       pdf.text('130 N Hamilton St, STE B102,', 20, 26)
       pdf.text('Georgetown, KY 40324', 20, 31)
       pdf.text('(502) 497-1812', 20, 36)
 
       // PURCHASE ORDER title (right side)
       pdf.setFontSize(32)
-      pdf.setFont(undefined, 'bold')
+      pdf.setFont('helvetica', 'bold')
       pdf.text('PURCHASE ORDER', 190, 28, { align: 'right' })
 
       pdf.setFontSize(12)
@@ -48,23 +48,23 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
 
       // Vendor section
       pdf.setFontSize(10)
-      pdf.setFont(undefined, 'bold')
+      pdf.setFont('helvetica', 'bold')
       pdf.text('Vendor:', 20, 60)
 
-      pdf.setFont(undefined, 'normal')
+      pdf.setFont('helvetica', 'normal')
       pdf.text(po?.vendors?.name || '', 20, 66)
       pdf.text(po?.vendors?.address || '', 20, 71)
       pdf.text(`${po?.vendors?.city}, ${po?.vendors?.state} ${po?.vendors?.zip}`, 20, 76)
 
       // Ship To section
-      pdf.setFont(undefined, 'bold')
+      pdf.setFont('helvetica', 'bold')
       pdf.text('Ship To:', 20, 90)
 
-      pdf.setFont(undefined, 'normal')
+      pdf.setFont('helvetica', 'normal')
       pdf.text(po?.ship_to_address || '', 20, 96, { maxWidth: 100 })
 
       // Date (right side)
-      pdf.setFont(undefined, 'normal')
+      pdf.setFont('helvetica', 'normal')
       pdf.text('Date :', 150, 90)
       pdf.text(new Date(po?.date || '').toLocaleDateString('en-US', {
         year: 'numeric',
@@ -76,7 +76,7 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
       const tableTop = 115
       pdf.setFillColor(60, 60, 60)
       pdf.setTextColor(255, 255, 255)
-      pdf.setFont(undefined, 'bold')
+      pdf.setFont('helvetica', 'bold')
       pdf.setFontSize(9)
       pdf.rect(20, tableTop, 170, 6, 'F')
       pdf.text('Item & Description', 22, tableTop + 4)
@@ -86,7 +86,7 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
 
       // Line items
       pdf.setTextColor(0, 0, 0)
-      pdf.setFont(undefined, 'normal')
+      pdf.setFont('helvetica', 'normal')
       pdf.setFontSize(9)
       let yPos = tableTop + 10
 
@@ -106,15 +106,15 @@ export default function POViewPage({ params }: { params: Promise<{ id: string }>
 
       // Totals section
       pdf.setFontSize(9)
-      pdf.setFont(undefined, 'normal')
+      pdf.setFont('helvetica', 'normal')
       pdf.text('Tax Exempt Amount:', 130, yPos)
-      pdf.text(`${parseFloat(po?.tax_exempt_amount || 0).toFixed(2)}`, 180, yPos)
+      pdf.text(String(parseFloat(String(po?.tax_exempt_amount || 0)).toFixed(2)), 180, yPos)
 
       yPos += 7
-      pdf.setFont(undefined, 'bold')
+      pdf.setFont('helvetica', 'bold')
       pdf.setFontSize(11)
       pdf.text('Total', 130, yPos)
-      pdf.text(`$${parseFloat(po?.total || 0).toFixed(2)}`, 180, yPos)
+      pdf.text(`$${String(parseFloat(String(po?.total || 0)).toFixed(2))}`, 180, yPos)
 
       pdf.save(`${po?.po_number}.pdf`)
     } catch (error) {

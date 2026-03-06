@@ -28,7 +28,7 @@ export default function EditVendorPage({ params }: { params: Promise<{ id: strin
     fetchVendor()
   }, [id])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (vendor) {
       setVendor({
         ...vendor,

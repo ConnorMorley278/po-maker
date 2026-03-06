@@ -23,17 +23,13 @@ export async function POST(request: Request) {
 
     // Calculate totals
     let subtotal = 0
-    let taxAmount = 0
     body.line_items.forEach(item => {
       const itemAmount = item.quantity * item.unit_price
       subtotal += itemAmount
-      if (item.tax_rate > 0) {
-        taxAmount += itemAmount * (item.tax_rate / 100)
-      }
     })
 
-    const total = subtotal + taxAmount
-    const taxExemptAmount = subtotal - (subtotal * 0.15)
+    const total = subtotal
+    const taxExemptAmount = subtotal
 
     // Create PO
     const { data: po, error: poError } = await supabase
@@ -43,8 +39,6 @@ export async function POST(request: Request) {
         date: body.date,
         vendor_id: body.vendor_id,
         ship_to_address: body.ship_to_address,
-        delivery_address: body.delivery_address,
-        payment_terms: body.payment_terms,
         notes: body.notes,
         tax_exempt_amount: taxExemptAmount,
         total: total,
@@ -59,7 +53,6 @@ export async function POST(request: Request) {
       description: item.description,
       quantity: item.quantity,
       unit_price: item.unit_price,
-      tax_rate: item.tax_rate,
       amount: item.quantity * item.unit_price,
     }))
 
