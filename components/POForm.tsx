@@ -156,6 +156,7 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
         <table className="w-full border-collapse border mb-4">
           <thead>
             <tr className="bg-gray-200">
+              <th className="border p-2">SKU</th>
               <th className="border p-2">Description</th>
               <th className="border p-2 w-20">Qty</th>
               <th className="border p-2 w-20">Rate</th>
@@ -169,19 +170,39 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
               return (
                 <tr key={item.id}>
                   <td className="border p-2">
+                    <select
+                      value={item.sku}
+                      onChange={(e) => {
+                        const selectedItem = items.find(i => i.sku === e.target.value)
+                        if (selectedItem) {
+                          handleLineItemChange(item.id, 'sku', selectedItem.sku)
+                          handleLineItemChange(item.id, 'description', selectedItem.description)
+                          handleLineItemChange(item.id, 'unit_price', selectedItem.selling_price)
+                          handleLineItemChange(item.id, 'quantity', 1)
+                        }
+                      }}
+                      className="w-full border p-1 rounded"
+                      required
+                    >
+                      <option value="">Select SKU</option>
+                      {items.map(it => (
+                        <option key={it.id} value={it.sku}>{it.sku}</option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="border p-2">
                     <input
                       type="text"
                       value={item.description}
-                      onChange={(e) => handleLineItemChange(item.id, 'description', e.target.value)}
-                      className="w-full border p-1 rounded"
-                      required
+                      disabled
+                      className="w-full border p-1 rounded bg-gray-100"
                     />
                   </td>
                   <td className="border p-2">
                     <input
                       type="number"
                       value={item.quantity}
-                      onChange={(e) => handleLineItemChange(item.id, 'quantity', parseFloat(e.target.value))}
+                      onChange={(e) => handleLineItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
                       className="w-full border p-1 rounded"
                       step="0.01"
                       required
@@ -191,10 +212,9 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
                     <input
                       type="number"
                       value={item.unit_price}
-                      onChange={(e) => handleLineItemChange(item.id, 'unit_price', parseFloat(e.target.value))}
-                      className="w-full border p-1 rounded"
+                      disabled
+                      className="w-full border p-1 rounded bg-gray-100"
                       step="0.01"
-                      required
                     />
                   </td>
                   <td className="border p-2 text-right">${amount.toFixed(2)}</td>
