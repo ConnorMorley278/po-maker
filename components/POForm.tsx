@@ -19,6 +19,7 @@ interface POFormProps {
 
 export default function POForm({ onSubmit, loading, initialData }: POFormProps) {
   const [vendors, setVendors] = useState<Vendor[]>([])
+  const [items, setItems] = useState<any[]>([])
   const [lineItems, setLineItems] = useState<LineItemInput[]>([
     { id: '1', description: '', quantity: 1, unit_price: 0 },
   ])
@@ -37,7 +38,14 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
       setVendors(data)
     }
 
+    const fetchItems = async () => {
+      const res = await fetch('/api/items')
+      const data = await res.json()
+      setItems(data)
+    }
+
     fetchVendors()
+    fetchItems()
   }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
