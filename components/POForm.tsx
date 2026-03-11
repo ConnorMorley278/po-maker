@@ -21,7 +21,7 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
   const [vendors, setVendors] = useState<Vendor[]>([])
   const [items, setItems] = useState<any[]>([])
   const [lineItems, setLineItems] = useState<LineItemInput[]>([
-    { id: '1', description: '', quantity: 1, unit_price: 0 },
+    { id: '1', sku: '', description: '', quantity: 1, unit_price: 0 },
   ])
 
   const [formData, setFormData] = useState({
@@ -74,7 +74,7 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
 
   const addLineItem = () => {
     const newId = Date.now().toString()
-    setLineItems(prev => [...prev, { id: newId, description: '', quantity: 1, unit_price: 0 }])
+    setLineItems(prev => [...prev, { id: newId, sku: '', description: '', quantity: 1, unit_price: 0 }])
   }
 
   const removeLineItem = (id: string) => {
