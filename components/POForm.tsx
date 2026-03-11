@@ -204,7 +204,7 @@ export default function POForm({ onSubmit, loading, initialData }: POFormProps) 
                       value={item.quantity}
                       onChange={(e) => handleLineItemChange(item.id, 'quantity', parseFloat(e.target.value) || 0)}
                       className="w-full border p-1 rounded"
-                      step="0.01"
+                      step="1"
                       required
                     />
                   </td>
